@@ -14,18 +14,22 @@ app = Flask(__name__)
 
 beta_fits, residuals, ratedata = loadData()
 
+maturities_fit = np.asarray([1,2,3,6,12,24,36,60,84,120,240,360]) 
+materities_html = []
+
+for maturity in maturities_fit:
+    materities_html.append({"value":f"{maturity}","text":f"YTM - {maturity}"})
+
+
 @app.route("/")
 def index():
     """Return the homepage."""
-    return render_template("index.html")
+    return render_template("index.html",maturities = materities_html)
 
 
 @app.route("/yields")
 def yields():
     """Return a list of sample names."""
-
-    # Use Pandas to perform the sql query
-    maturities_fit = np.asarray([1,2,3,6,12,24,36,60,84,120,240,360]) 
 
     yield_fits = fit_yield_curve(beta_fits,maturities_fit)
     yield_fits.reset_index(inplace = True)
@@ -34,8 +38,7 @@ def yields():
 
 @app.route("/betas")
 def betas():
-
-    beta_fits_reset = beta_fits.reset_index
+    beta_fits_reset = beta_fits.reset_index()
     # Return a list of the column names (sample names)
     return beta_fits_reset.to_json(orient='records')
 

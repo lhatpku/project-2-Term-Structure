@@ -5,26 +5,105 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Yield Curve Model</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!-- font awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  <title>Yield Curve Dashboard</title>
+  <style>
+    header{
+      background: url(https://static1.squarespace.com/static/555008b3e4b0c62a575b8762/t/556c9751e4b072fc1ba8103d/1433179986764/CPE-Calculator-and-Pen-2.jpg?format=2500w);
+      background-size: cover;
+      background-position: center;
+      min-height: 300px;    
+    }
+    @media screen and (max-width: 670px){
+      header{
+        min-height: 200px;
+      }
+    }
+    .section{
+      padding-top: 4vw;
+      padding-bottom: 4vw;
+    }
+    .tabs .indicator{
+      background-color: #1a237e;
+    }
+    .tabs .tab a:focus, .tabs .tab a:focus.active{
+      background: transparent;
+    }
+  </style>
 </head>
+  
+<body class="grey lighten-2">
 
-<body>
-
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12 jumbotron text-center">
-        <h1>Yield Curve Model Dashboard</h1>
+  <header>
+    <div class="container">
+      <div class="section center-align">
+        <h1 class = "brown-text text-darken-3">Yield Curve Dashboard</h1>
       </div>
     </div>
+  </header>
+
+  <div class="container section">
     <div class="row">
-      <div>
-        <div id="chart"></div>
+      <div class="col s12 m3">
+        <form class="card z-depth-0">
+          <div class="card-content">
+            <span class="card-title indigo-text">Select to Plot</span>
+            <div class="input-field">
+              <select class="icons" id="yc-select">
+                <option value="" disabled>Choose "Years to Maturity"</option>
+                <option value="yc-all" selected>All</option>
+                {% for maturity in maturities %}
+                <option value="{{maturity.value}}" >{{maturity.text}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="input-field">
+              <input type="text" id="date" class="datepicker">
+              <label for="date">Starting Date</label>
+            </div>
+            <div class="input-field">
+              <input type="text" id="date" class="datepicker">
+              <label for="date">Ending Date</label>
+            </div>
+          </div>
+
+          <div class="card-action">
+            <button class="btn-large btn-floating waves-effect waves-light blue" type="submit" name="action">
+                <i class="material-icons">refresh</i>
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="col s12 m9">
+        <div class="canvas" id="chart"></div>
       </div>
     </div>
   </div>
 
-  <!-- <script src="https://cdn.plot.ly/plotly-1.31.2.min.js"></script> -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $('select').formSelect();
+      $('.dropdown-trigger').dropdown();
+      $('.sidenav').sidenav();
+      $('.materialboxed').materialbox();
+      $('.parallax').parallax();
+      $('.tabs').tabs();
+      $('.datepicker').datepicker({
+        disableWeekends: true,
+        yearRange: 1
+      });
+      $('.tooltipped').tooltip();
+      $('.scrollspy').scrollSpy();
+
+    });
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.0.3/chroma.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>

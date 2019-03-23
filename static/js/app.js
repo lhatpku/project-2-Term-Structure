@@ -1,3 +1,5 @@
+var yc_dropdown_list = [1,2,3,6,12,24,36,60,84,120,240,360];
+
 function remove(array, element) {
   return array.filter(el => el !== element);
 }
@@ -27,7 +29,7 @@ function buildCharts() {
         trace = {
           type: "scatter",
           mode: "lines",
-          name: key + ' - month yield rate',
+          name: key + ' - YTM',
           x: unpack(yield_data, 'Date'),
           y: unpack(yield_data, key),
           line: {color: colour(key)}
@@ -38,35 +40,18 @@ function buildCharts() {
       }
 
     });
-
-  
-    // var trace1 = {
-    //   type: "scatter",
-    //   mode: "lines",
-    //   name: '1-year',
-    //   x: unpack(yield_data, 'Date'),
-    //   y: unpack(yield_data, '12'),
-    //   line: {color: '#17BECF'}
-    // }
-    
-    // var trace2 = {
-    //   type: "scatter",
-    //   mode: "lines",
-    //   name: '5-year',
-    //   x: unpack(yield_data, 'Date'),
-    //   y: unpack(yield_data, '60'),
-    //   line: {color: '#7F7F7F'}
-    // }
-    
-    // var data = [trace1,trace2];
     
     var layout = {
-      title: 'Basic Time Series',
+      title: 'Yield Curve Time Series',
+      showlegend: true,
+	    legend: {"orientation": "h",}
     };
     
-    Plotly.newPlot('chart', data, layout);
+    Plotly.newPlot('chart', data, layout,{showSendToCloud: true});
     
   })
 }
+
+
 
 buildCharts();
