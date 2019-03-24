@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/yc_fit.css') }}">
   <title>Yield Curve Dashboard</title>
   <style>
     header{
@@ -42,7 +43,7 @@
   <header>
     <div class="container">
       <div class="section center-align">
-        <h1 class = "brown-text text-darken-3">Yield Curve Dashboard</h1>
+        <h1 class = "brown-text text-darken-3 z-depth-3 white">Yield Curve Dashboard</h1>
       </div>
     </div>
   </header>
@@ -51,6 +52,9 @@
     <div class="row">
       <div class="col s12 m7">
           <div class="canvas" id="3d-chart"></div>
+          <button id="play-button">Play</button>
+          <div id="vis">
+          </div>
       </div>
       <div class="col s12 m4 offset-m1">
         <ul class="tabs">
@@ -140,7 +144,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="{{ url_for('static', filename='js/yc_time_series.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/yc_3d.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/yc_fit.js') }}"></script>
 </body>
 
 </html>
