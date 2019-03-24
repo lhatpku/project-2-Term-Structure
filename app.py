@@ -38,9 +38,10 @@ def yields():
 
 @app.route("/betas")
 def betas():
-    beta_fits_reset = beta_fits.reset_index()
+    beta_fits_plot = pd.concat([beta_fits, ratedata], axis=1, join_axes=[beta_fits.index])
+    beta_fits_plot_reset = beta_fits_plot.reset_index()
     # Return a list of the column names (sample names)
-    return beta_fits_reset.to_json(orient='records')
+    return beta_fits_plot_reset.to_json(orient='records')
 
 if __name__ == "__main__":
     app.run()

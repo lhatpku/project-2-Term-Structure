@@ -73,7 +73,7 @@ def loadData():
     residuals = pd.DataFrame(residuals, columns=[str(mat) for mat in maturities])
 
     beta_fits.index = ratedata.index
-    # residuals.index = ratedata.index
+    residuals.index = ratedata.index
 
     return beta_fits, residuals, ratedata
 
@@ -91,16 +91,6 @@ def fit_yield_curve(beta_fits,maturities):
 
     return yield_fits
 
-
-
-
-
-
-
-# beta_fits, residuals, ratedata = loadData()
-
-# print(beta_fits)
-# print(residuals)
 
 
 def table2(residuals):

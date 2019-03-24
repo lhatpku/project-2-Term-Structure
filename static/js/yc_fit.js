@@ -10,7 +10,7 @@ d3.json(url).then(function(beta_data){
     var endDate = new Date(beta_data[beta_data.length-1].Date);
 
     var margin = {top:40, right:40, bottom:80, left:30};
-    var width = 480 - margin.left - margin.right;
+    var width = 600 - margin.left - margin.right;
     var height = 480 - margin.top - margin.bottom;
 
     var svg = d3.select("#vis")
@@ -58,6 +58,7 @@ d3.json(url).then(function(beta_data){
         .data(x.ticks(5))
         .enter()
         .append("text")
+        .attr("fill","#4682b4")
         .attr("x", x)
         .attr("y", -15)
         .attr("text-anchor", "middle")
@@ -70,13 +71,14 @@ d3.json(url).then(function(beta_data){
     var label = slider.append("text")  
         .attr("class", "label")
         .attr("text-anchor", "middle")
+        .attr("fill","#8b4513")
         .text(formatDate(startDate))
         .attr("transform", "translate(0," + (25) + ")");
 
     //////// Generate Yield Curve ////////////
     var lam_t = .0609;
 
-    var maturities_output = d3.range(3,360,3);
+    var maturities_output = [...[1,2],...d3.range(3,360,3)];
 
     var yield_rate_output_list = [];
 
@@ -97,6 +99,29 @@ d3.json(url).then(function(beta_data){
 
     })
 
+    var yield_rate_raw_list = [];
+    beta_data.forEach((d) => {
+
+        yield_rate_raw = [];
+        yield_rate_raw.push({"maturity":1,"rate":d["MO_1"]});
+        yield_rate_raw.push({"maturity":2,"rate":d["MO_2"]});
+        yield_rate_raw.push({"maturity":3,"rate":d["MO_3"]});
+        yield_rate_raw.push({"maturity":6,"rate":d["MO_6"]});
+        yield_rate_raw.push({"maturity":12,"rate":d["YR_1"]});
+        yield_rate_raw.push({"maturity":24,"rate":d["YR_2"]});
+        yield_rate_raw.push({"maturity":36,"rate":d["YR_3"]});
+        yield_rate_raw.push({"maturity":60,"rate":d["YR_5"]});
+        yield_rate_raw.push({"maturity":84,"rate":d["YR_7"]});
+        yield_rate_raw.push({"maturity":120,"rate":d["YR_10"]});
+        yield_rate_raw.push({"maturity":240,"rate":d["YR_20"]});
+        yield_rate_raw.push({"maturity":360,"rate":d["YR_30"]});
+
+        yield_rate_raw = yield_rate_raw.filter((d) => d.rate !== null);
+
+        yield_rate_raw_list.push({"Date":d.Date,"Data":yield_rate_raw});
+
+    })
+
     ////////// plot //////////
     const graph = svg.append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -110,6 +135,23 @@ d3.json(url).then(function(beta_data){
 
     const path = graph.append('path');
 
+    // create dotted line group and append to graph
+    const dottedLines = graph.append('g')
+        .attr('class', 'lines')
+        .style('opacity', 0);
+
+    // create x dotted line and append to dotted line group
+    const xDottedLine = dottedLines.append('line')
+        .attr('stroke', '#aaa')
+        .attr('stroke-width', 1)
+        .attr('stroke-dasharray', 4);
+
+    // create y dotted line and append to dotted line group
+    const yDottedLine = dottedLines.append('line')
+        .attr('stroke', '#aaa')
+        .attr('stroke-width', 1)
+        .attr('stroke-dasharray', 4);
+
 
     var dataset = yield_rate_output_list.map((d) => {
         d.Data = d.Data;
@@ -117,41 +159,45 @@ d3.json(url).then(function(beta_data){
         return d;
     });
 
-    console.log(dataset);
+    var dataset_raw = yield_rate_raw_list.map((d) => {
+        d.Data = d.Data;
+        d.Date = parseDate(d.Date);
+        return d;
+    });
 
-    drawPlot(dataset[0].Data);
+    drawPlot(dataset[0].Data,dataset_raw[0].Data,dataset[0].Date);
     
     playButton
     .on("click", function() {
-    var button = d3.select(this);
-    if (button.text() == "Pause") {
-        moving = false;
-        clearInterval(timer);
-        // timer = 0;
-        button.text("Play");
-    } else {
-        moving = true;
-        timer = setInterval(step, 100);
-        button.text("Pause");
-    }
-    console.log("Slider moving: " + moving);
+        var button = d3.select(this);
+        if (button.text() == "Stop") {
+            moving = false;
+            clearInterval(timer);
+            // timer = 0;
+            button.text("Play");
+        } else {
+            moving = true;
+            timer = setInterval(step, 100);
+            button.text("Stop");
+        }
+        console.log("Slider moving: " + moving);
     })
 
     
     function step() {
-    update(x.invert(currentValue));
-    currentValue = currentValue + (targetValue/151);
-    if (currentValue > targetValue) {
-        moving = false;
-        currentValue = 0;
-        clearInterval(timer);
-        // timer = 0;
-        playButton.text("Play");
-        console.log("Slider moving: " + moving);
-    }
+        update(x.invert(currentValue));
+        currentValue = currentValue + (targetValue/151);
+        if (currentValue > targetValue) {
+            moving = false;
+            currentValue = 0;
+            clearInterval(timer);
+            // timer = 0;
+            playButton.text("Play");
+            console.log("Slider moving: " + moving);
+        }
     }
 
-    function drawPlot(data) {
+    function drawPlot(data,data_raw,date) {
 
         // x and y scale
         var x_ = d3.scaleLinear().range([0,width]);
@@ -164,15 +210,67 @@ d3.json(url).then(function(beta_data){
 
         // Line path element
         x_.domain(d3.extent(data,d => d.maturity));
-        y_.domain([0,d3.max(data,d => d.rate)]);
+        y_.domain([-0.5,9]);
 
         // Update data path
         path.data([data])
             .attr('fill','none')
-            .attr('stroke','#708090')
+            .attr('stroke','#87cefa')
             .attr('stroke-width',2)
             .attr('d',line);
-        
+
+        // create circles for points
+        const circles = graph.selectAll('circle')
+            .data(data_raw);
+
+        // remove unwanted points
+        circles.exit().remove();
+
+        // update current points
+        circles.attr('r', '4')
+        .attr('cx', d => x_(d.maturity))
+        .attr('cy', d => y_(d.rate));
+
+        // add new points
+        circles.enter()
+            .append('circle')
+            .attr('r', '4')
+            .attr('cx', d => x_(d.maturity))
+            .attr('cy', d => y_(d.rate))
+            .attr('fill', '#d2691e');
+
+        // add event listeners to circle (and show dotted lines)
+        graph.selectAll('circle')
+        .on('mouseover', (d, i, n) => {
+            d3.select(n[i])
+                .transition().duration(100)
+                .attr('r', 8)
+                .attr('fill', '#fff');
+            // set x dotted line coords (x1,x2,y1,y2)
+            xDottedLine
+                .attr('x1', x_(d.maturity))
+                .attr('x2', x_(d.maturity))
+                .attr('y1', height)
+                .attr('y2', y_(d.rate));
+            // set y dotted line coords (x1,x2,y1,y2)
+            yDottedLine
+                .attr('x1', 0)
+                .attr('x2', x_(d.maturity))
+                .attr('y1', y_(d.rate))
+                .attr('y2', y_(d.rate));
+            // show the dotted line group (opacity)
+            dottedLines.style('opacity', 1);
+        })
+        .on('mouseleave', (d,i,n) => {
+            d3.select(n[i])
+                .transition().duration(100)
+                .attr('r', 4)
+                .attr('fill', '#d2691e');
+                // hide the dotted line group (opacity)
+                dottedLines.style('opacity', 0)
+        });
+
+
         const xAxis = d3.axisBottom(x_)
             .ticks(10)
             .tickFormat(d => d + '-month');
@@ -192,20 +290,28 @@ d3.json(url).then(function(beta_data){
     }
 
     function update(h) {
-    // update position and text of label according to slider scale
-    handle.attr("cx", x(h));
-    label
-        .attr("x", x(h))
-        .text(formatDate(h));
+        // update position and text of label according to slider scale
+        handle.attr("cx", x(h));
+        label
+            .attr("x", x(h))
+            .text(formatDate(h));
 
-    // filter data set and redraw plot
-    var newData = dataset.filter(function(d) {
-        return d.Date <= h;
-    })
-    if (newData.length < 1) {
-        newData = dataset[0];
-    }
-    drawPlot(newData[newData.length-1].Data);
+        // filter data set and redraw plot
+        var newData = dataset.filter(function(d) {
+            return d.Date <= h;
+        })
+        var newData_raw = dataset_raw.filter(function(d) {
+            return d.Date <= h;
+        })
+
+        if (newData.length < 1) {
+            newData = dataset[0];
+        }
+        if (newData_raw.length < 1) {
+            newData_raw = dataset_raw[0];
+        }
+
+        drawPlot(newData[newData.length-1].Data,newData_raw[newData_raw.length-1].Data,newData[newData.length-1].Date);
     }
 
 })
