@@ -58,7 +58,7 @@
             <a href="#fact1" class="indigo-text text-darken-4">Fact1</a>
           </li>
           <li class="tab col s6">
-            <a href="#fact2" class="indigo-text text-darken-4">Fact1</a>
+            <a href="#fact2" class="indigo-text text-darken-4">Fact2</a>
           </li>
         </ul>
         <div class="col s12" id="fact1">
@@ -83,7 +83,6 @@
             <span class="card-title indigo-text">Select to Plot</span>
             <div class="input-field">
               <select class="icons" id="yc-select">
-                <option value="" disabled>Choose "Years to Maturity"</option>
                 <option value="yc-all" selected>All</option>
                 {% for maturity in maturities %}
                 <option value="{{maturity.value}}" >{{maturity.text}}</option>
@@ -91,17 +90,16 @@
               </select>
             </div>
             <div class="input-field">
-              <input type="text" id="date" class="datepicker">
+              <input type="text" id="yc-date-start" class="datepicker">
               <label for="date">Starting Date</label>
             </div>
             <div class="input-field">
-              <input type="text" id="date" class="datepicker">
+              <input type="text" id="yc-date-end" class="datepicker">
               <label for="date">Ending Date</label>
             </div>
           </div>
-
           <div class="card-action">
-            <button class="btn-large btn-floating waves-effect waves-light blue" type="submit" name="action">
+            <button class="btn-large btn-floating waves-effect waves-light blue" type="submit" id = 'yc-submit' name="action">
                 <i class="material-icons">refresh</i>
             </button>
           </div>
@@ -125,7 +123,9 @@
       $('.tabs').tabs();
       $('.datepicker').datepicker({
         disableWeekends: true,
-        yearRange: 1
+        yearRange: 20,
+        defaultDate: new Date('2010-03-31'),
+        showClearBtn: true
       });
       $('.tooltipped').tooltip();
       $('.scrollspy').scrollSpy();
