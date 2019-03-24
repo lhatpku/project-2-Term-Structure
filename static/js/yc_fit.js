@@ -9,8 +9,8 @@ d3.json(url).then(function(beta_data){
     var startDate = new Date(beta_data[0].Date);
     var endDate = new Date(beta_data[beta_data.length-1].Date);
 
-    var margin = {top:40, right:40, bottom:80, left:30};
-    var width = 600 - margin.left - margin.right;
+    var margin = {top:20, right:40, bottom:80, left:50};
+    var width = 560 - margin.left - margin.right;
     var height = 480 - margin.top - margin.bottom;
 
     var svg = d3.select("#vis")
@@ -95,7 +95,9 @@ d3.json(url).then(function(beta_data){
 
         });
 
-        yield_rate_output_list.push({"Date":d.Date,"Data":yield_rates});
+        var betas = {"beta1":d.beta1,"beta2":d.beta2,"beta3":d.beta3}
+
+        yield_rate_output_list.push({"Date":d.Date,"Data":yield_rates,"Beta":betas});
 
     })
 
@@ -155,6 +157,7 @@ d3.json(url).then(function(beta_data){
 
     var dataset = yield_rate_output_list.map((d) => {
         d.Data = d.Data;
+        d.Beta = d.Beta
         d.Date = parseDate(d.Date);
         return d;
     });
@@ -166,6 +169,7 @@ d3.json(url).then(function(beta_data){
     });
 
     drawPlot(dataset[0].Data,dataset_raw[0].Data,dataset[0].Date);
+    updateTable(dataset[0].Beta);
     
     playButton
     .on("click", function() {
@@ -289,6 +293,24 @@ d3.json(url).then(function(beta_data){
             
     }
 
+    function updateTable(betas) {
+
+        d3.select("#fit-stat").html("");
+
+        var selection = d3.select("#fit-stat");
+
+        var betas_keys = Object.keys(betas);
+
+        betas_keys.forEach((d) => {
+
+            var tr_new = selection.append("tr");
+            tr_new.append("td").text(d);
+            tr_new.append("td").text(Math.round(betas[d]*1000)/1000);
+        
+        });
+
+    }
+
     function update(h) {
         // update position and text of label according to slider scale
         handle.attr("cx", x(h));
@@ -312,6 +334,7 @@ d3.json(url).then(function(beta_data){
         }
 
         drawPlot(newData[newData.length-1].Data,newData_raw[newData_raw.length-1].Data,newData[newData.length-1].Date);
+        updateTable(newData[newData.length-1].Beta)
     }
 
 })
