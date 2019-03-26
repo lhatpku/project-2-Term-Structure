@@ -249,7 +249,7 @@ d3.json(url).then(function(beta_data){
             d3.select(n[i])
                 .transition().duration(100)
                 .attr('r', 8)
-                .attr('fill', '#fff');
+                .attr('fill', '#008b8b');
             // set x dotted line coords (x1,x2,y1,y2)
             xDottedLine
                 .attr('x1', x_(d.maturity))

@@ -1,0 +1,31 @@
+header{
+    background: url(https://static1.squarespace.com/static/555008b3e4b0c62a575b8762/t/556c9751e4b072fc1ba8103d/1433179986764/CPE-Calculator-and-Pen-2.jpg?format=2500w);
+    background-size: cover;
+    background-position: center;
+    min-height: 300px;    
+}
+@media screen and (max-width: 670px){
+header{
+    min-height: 200px;
+}
+}
+.section{
+    padding-top: 4vw;
+    padding-bottom: 4vw;
+}
+.tabs .indicator{
+    background-color: #1a237e;
+}
+.tabs .tab a:focus, .tabs .tab a:focus.active{
+    background: transparent;
+}
+
+
+hr {
+    border: dotted #745048;
+    border-bottom: none;
+    height: 0px;
+    width:12%;
+    margin: 100px auto;
+    
+}
