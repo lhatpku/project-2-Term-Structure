@@ -18,7 +18,7 @@ maturities_fit = np.asarray([1,2,3,6,12,24,36,60,84,120,240,360])
 materities_html = []
 
 for maturity in maturities_fit:
-    materities_html.append({"value":f"{maturity}","text":f"YTM - {maturity}"})
+     materities_html.append({"value":f"{maturity}","text":f"{maturity}"})
 
 
 @app.route("/")

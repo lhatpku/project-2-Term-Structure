@@ -50,7 +50,10 @@ function buildCharts() {
     var layout = {
       title: 'Yield Curve Time Series',
       showlegend: true,
-	    legend: {"orientation": "h",}
+      legend: {"orientation": "h",},
+      yaxis: {
+        title: 'Yield Rate (%)'
+      }
     };
     
     Plotly.newPlot('chart', data, layout,{showSendToCloud: true});
@@ -62,7 +65,7 @@ function buildCharts() {
     
       var plot_date_start = yc_date_start.value;
       var plot_date_end = yc_date_end.value;
-      var plot_yc_select = yc_select.options[yc_select.selectedIndex].value;
+      var plot_yc_select = $('#yc-select').val();
 
       if (plot_date_start === "") {
         plot_date_start = yield_data[0]["Date"];
@@ -80,20 +83,28 @@ function buildCharts() {
         return (Date_obj >= startDate && Date_obj <= endDate);
       });
 
-      if (plot_yc_select !== 'yc-all') {
+      if (plot_yc_select.includes('all')) {
 
         data = [];
 
-        trace = {
-          type: "scatter",
-          mode: "lines",
-          name: plot_yc_select + ' - YTM',
-          x: unpack(yield_data_filter, 'Date'),
-          y: unpack(yield_data_filter, plot_yc_select),
-          line: {color: colour(plot_yc_select)}
-        };
+        output_list.forEach((key) => {
 
-        data.push(trace);
+          if (key !== "Date") {
+
+            trace = {
+              type: "scatter",
+              mode: "lines",
+              name: key + ' - YTM',
+              x: unpack(yield_data_filter, 'Date'),
+              y: unpack(yield_data_filter, key),
+              line: {color: colour(key)}
+            }
+
+            data.push(trace)
+      
+          }
+
+        });
 
       }
 
@@ -101,7 +112,7 @@ function buildCharts() {
 
         data = [];
 
-        output_list.forEach((key) => {
+        plot_yc_select.forEach((key) => {
 
           if (key !== "Date") {
 
