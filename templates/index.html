@@ -30,7 +30,7 @@
     <div class="row">
       <div class="col s12 m7 white">
           <div class="canvas" id="3d-chart"></div>
-          <button id="play-button">Play</button>
+          <button id="play-button" class = "btn waves-effect waves-light pulse btn-floating"><i class="material-icons">play_arrow</i></button>
           <div id="vis">
           </div>
       </div>
@@ -38,14 +38,14 @@
         <ul class="collapsible">
           <li>
             <div class="collapsible-header"><i class="material-icons">information</i>What do you know about Yield Curve?</div>
-            <div class="collapsible-body"><span>A yield curve is a line that plots the interest rates, at a set point in time, of bonds having equal credit quality but differing maturity dates. 
+            <div class="collapsible-body blue lighten-3"><span>A yield curve is a line that plots the interest rates, at a set point in time, of bonds having equal credit quality but differing maturity dates. 
                 The most frequently reported yield curve compares the three-month, two-year, five-year, 10-year and 30-year U.S. Treasury debt. 
                 This yield curve is used as a benchmark for other debt in the market, 
                 such as mortgage rates or bank lending rates, and it is used to predict changes in economic output and growth.</span></div>
           </li>
           <li>
             <div class="collapsible-header"><i class="material-icons">question_answer</i>Why Nelson–Siegel framework?</div>
-            <div class="collapsible-body"><span>Here we introduce a novel twist of interpretation,
+            <div class="collapsible-body blue lighten-3"><span>Here we introduce a novel twist of interpretation,
                 showing that the three coefficients in the Nelson–Siegel curve may be interpreted as
                 latent level, slope and curvature factors. We also argue that the nature of the factors
                 and factor loadings implicit in the Nelson–Siegel model facilitate consistency with
@@ -53,8 +53,9 @@
                 years.</span></div>
           </li>
           <li>
-            <div class="collapsible-header"><i class="material-icons">view_list</i>Checkout How well the model fits.</div>
-            <div class="collapsible-body">
+            <div class="collapsible-header"><i class="material-icons">view_compact</i>Nelson-Siegel Fitting Parameters.</div>
+            <div class="collapsible-body blue lighten-3">
+                <p>Nelsen Siegel ...</p>
                 <table class="highlight">
                   <thead>
                     <tr>
@@ -63,6 +64,21 @@
                     </tr>
                   </thead>
                   <tbody id="fit-stat">
+                  </tbody>
+                </table>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="material-icons">view_list</i>How well is the Fitting?</div>
+            <div class="collapsible-body blue lighten-3">
+                <table class="highlight">
+                  <thead>
+                    <tr>
+                        <th>Measure</th>
+                        <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody id="fit-measure">
                   </tbody>
                 </table>
             </div>
@@ -77,7 +93,7 @@
       <div class="col s12 m4">
         <form class="card z-depth-2">
           <div class="card-content">
-            <span class="card-title indigo-text">Select to Plot</span>
+            <span class="card-title red-text text-accent-4 center-align">Select to Plot</span>
             <div class="input-field">
               <i class="material-icons prefix">search</i>
               <select multiple class="icons" id="yc-select">

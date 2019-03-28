@@ -1,15 +1,9 @@
 #play-button {
 
-    background: #ec9393;
-    padding-right: 26px;
-    border-radius: 3px;
     border: none;
     color: white;
     margin: 20px 0 0 20px;
-    padding:  0 18px;
-    width: 60px;
     cursor: pointer;
-    height: 30px;
 }
 
 #play-button:hover {

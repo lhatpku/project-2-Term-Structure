@@ -174,15 +174,16 @@ d3.json(url).then(function(beta_data){
     playButton
     .on("click", function() {
         var button = d3.select(this);
-        if (button.text() == "Stop") {
+        console.log(button.html());
+        if (button.html().includes(`<i class="material-icons">stop</i>`)) {
             moving = false;
             clearInterval(timer);
             // timer = 0;
-            button.text("Play");
+            button.html(`<i class="material-icons">play_arrow</i>`);
         } else {
             moving = true;
             timer = setInterval(step, 100);
-            button.text("Stop");
+            button.html(`<i class="material-icons">stop</i>`);
         }
         console.log("Slider moving: " + moving);
     })
@@ -196,7 +197,7 @@ d3.json(url).then(function(beta_data){
             currentValue = 0;
             clearInterval(timer);
             // timer = 0;
-            playButton.text("Play");
+            playButton.html(`<i class="material-icons">play_arrow</i>`);
             console.log("Slider moving: " + moving);
         }
     }
@@ -241,7 +242,7 @@ d3.json(url).then(function(beta_data){
             .attr('r', '4')
             .attr('cx', d => x_(d.maturity))
             .attr('cy', d => y_(d.rate))
-            .attr('fill', '#d2691e');
+            .attr('fill', '#ffa07a');
 
         // add event listeners to circle (and show dotted lines)
         graph.selectAll('circle')
@@ -249,7 +250,7 @@ d3.json(url).then(function(beta_data){
             d3.select(n[i])
                 .transition().duration(100)
                 .attr('r', 8)
-                .attr('fill', '#008b8b');
+                .attr('fill', '#a0522d');
             // set x dotted line coords (x1,x2,y1,y2)
             xDottedLine
                 .attr('x1', x_(d.maturity))
@@ -269,7 +270,7 @@ d3.json(url).then(function(beta_data){
             d3.select(n[i])
                 .transition().duration(100)
                 .attr('r', 4)
-                .attr('fill', '#d2691e');
+                .attr('fill', '#ffa07a');
                 // hide the dotted line group (opacity)
                 dottedLines.style('opacity', 0)
         });
