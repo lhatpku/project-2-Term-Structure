@@ -15,6 +15,9 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/yc_fit.css') }}">
   <title>Yield Curve Dashboard</title>
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_SVG" async>
+  </script>
 </head>
   
 <body class="grey lighten-2">
@@ -67,31 +70,35 @@
           <li>
             <div class="collapsible-header"><i class="material-icons">view_compact</i>Nelson-Siegel Fitting Parameters.</div>
             <div class="collapsible-body blue lighten-3">
-                <table class="highlight">
-                  <thead>
-                    <tr>
-                        <th>Parameter</th>
-                        <th>Value</th>
-                    </tr>
-                  </thead>
-                  <tbody id="fit-stat">
-                  </tbody>
-                </table>
+              <p>
+                When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+                $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+              </p>
+              <table class="highlight">
+                <thead>
+                  <tr>
+                      <th>Parameter</th>
+                      <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody id="fit-stat">
+                </tbody>
+              </table>
             </div>
           </li>
           <li>
             <div class="collapsible-header"><i class="material-icons">view_list</i>How well is the Fitting?</div>
             <div class="collapsible-body blue lighten-3">
-                <table class="highlight">
-                  <thead>
-                    <tr>
-                        <th>Measure</th>
-                        <th>Value</th>
-                    </tr>
-                  </thead>
-                  <tbody id="fit-measure">
-                  </tbody>
-                </table>
+              <table class="highlight">
+                <thead>
+                  <tr>
+                      <th>Measure</th>
+                      <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody id="fit-measure">
+                </tbody>
+              </table>
             </div>
           </li>
         </ul>
@@ -256,6 +263,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.0.3/chroma.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
+  <!-- Configuration to address for MathJax / Plotly conflict - which shows up with refresh -->
+  <script>window.PlotlyConfig = {MathJaxConfig: 'local'}</script> 
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="{{ url_for('static', filename='js/yc_time_series.js') }}"></script>
   <script src="{{ url_for('static', filename='js/yc_predict.js') }}"></script>
