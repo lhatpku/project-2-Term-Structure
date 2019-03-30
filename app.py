@@ -28,14 +28,24 @@ for maturity in maturities_fit:
 def index():
     """Return the homepage."""
     return render_template("index.html",maturities = materities_html)
-    
+
 @app.route("/yields")
 def yields():
+    """Return the yields to plot"""
+    beta_fits_monthly = beta_fits.resample('MS').mean()
+    monthly_data = fit_yield_curve(beta_fits_monthly, maturities_fit)
+    monthly_data = monthly_data.reset_index()
+    return monthly_data.to_json(orient='records')
+
+
+@app.route("/monthly_yields")
+def yields_monthly():
     """Return the yields to plot"""
     yield_fits = fit_yield_curve(beta_all,maturities_fit)
     yield_fits.reset_index(inplace = True)
     # Return a list of the column names (sample names)
     return yield_fits.to_json(orient='records')
+
 
 @app.route("/betas")
 def betas():
