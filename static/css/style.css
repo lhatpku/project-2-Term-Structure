@@ -29,3 +29,21 @@ hr {
     margin: 100px auto;
     
 }
+
+header{
+    position: relative;
+}
+.w3-center {
+    position: absolute;
+    left: 42%;
+    bottom: 0;
+}
+
+hr {
+    border: dotted #EAF6F6 6px;
+    border-bottom: none;
+    height: 0px;
+    width:4%;
+    margin: 100px auto;
+    
+}
