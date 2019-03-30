@@ -60,7 +60,7 @@ function buildCharts() {
       }
     };
     
-    Plotly.newPlot('chart', data, layout,{showSendToCloud: true});
+    Plotly.newPlot('timeseries-chart', data, layout,{showSendToCloud: true});
 
     // User Selection
     form.addEventListener('submit',(e) => {
@@ -137,7 +137,7 @@ function buildCharts() {
 
       }
       
-      Plotly.newPlot('chart', data, layout,{showSendToCloud: true});
+      Plotly.newPlot('timeseries-chart', data, layout,{showSendToCloud: true});
 
     });
        

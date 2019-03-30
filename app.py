@@ -46,5 +46,12 @@ def betas():
     # Return a list of the column names (sample names)
     return beta_fits_plot_reset.to_json(orient='records')
 
+@app.route("/betas_all")
+def betas_all():
+    """Return Prediction Information"""
+    beta_all_output = beta_all.reset_index()
+    # Return a list of the column names (sample names)
+    return beta_all_output.to_json(orient='records')
+
 if __name__ == "__main__":
     app.run()
