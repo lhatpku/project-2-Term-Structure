@@ -14,8 +14,19 @@ import os
 import pywt
 import sqlite3
 from sqlite3 import Error
+import warnings
+import itertools
+from dateutil.relativedelta import *
 
-py.tools.set_credentials_file(username='lhatpku', api_key='IQ9S1tothSzT9TmjMwnX')
+warnings.filterwarnings("ignore")
+plt.style.use('fivethirtyeight')
+
+# matplotlib.rcParams['axes.labelsize'] = 14
+# matplotlib.rcParams['xtick.labelsize'] = 12
+# matplotlib.rcParams['ytick.labelsize'] = 12
+# matplotlib.rcParams['text.color'] = 'k'
+
+# py.tools.set_credentials_file(username='lhatpku', api_key='IQ9S1tothSzT9TmjMwnX')
 
 maturities = asarray([1,2,3,6,12,24,36,60,84,120,240,360])
 beta_names = ['beta1', 'beta2', 'beta3']
@@ -127,31 +138,170 @@ def table3(beta_fits):
 
 	return table3
 
+def perDone(i, length, goal):
+	if i != 0:
+		if (float(i)/length) *100 > goal:
+			print("{}% done".format(goal))
+			return 10.
+		else:
+			return 0
+	else: 
+		return 0
 
-def yieldContors(ratedata):
+def ARforecast_analysis(ratedata, beta_fits):
 
-	data = [
-	    go.Contour(
-	        z = ratedata.values,
-	        x = ratedata.columns,
-	        y = ratedata.index)
-	    ]
+	ratedata.index = pd.to_datetime(ratedata.index)
+	ratedata_m = ratedata.resample('MS').mean()
 
-	layout = go.Layout(
-	    title='Yields vs. Maturities',
-	    width=640,
-	    height=480,
-	                xaxis=dict(
-	                title='Maturity (months)',
-	                titlefont=dict(
-	                    size=16)
-	                ),
-	            yaxis=dict(
-	                title='Date',
-	                titlefont=dict(
-	                    size=16)
-	                )
-	    )
+	beta_fits.index = pd.to_datetime(beta_fits.index)
+	beta_fits_m = beta_fits.resample('MS').mean()
 
-	fig = go.Figure(data=data, layout=layout)
-	return fig
+	N_out = len(ratedata_m.index) - 100 # N out of sample
+
+	beta_predict_nieve = pd.DataFrame(zeros((N_out, 3)), index=beta_fits_m.index[100:], columns=beta_fits_m.columns)
+
+	yield_forecast_nieve = pd.DataFrame(zeros((N_out, len(ratedata_m.columns))), index=beta_fits_m.index[100:], columns=ratedata_m.columns)
+
+	beta_predict_random = pd.DataFrame(zeros((N_out, 3)), index=beta_fits_m.index[100:], columns=beta_fits_m.columns)
+
+	yield_forecast_random =  pd.DataFrame(zeros((N_out, len(ratedata_m.columns))), index=beta_fits_m.index[100:], columns=ratedata_m.columns)
+
+	# for each date in the withheld series
+	d = 10.
+	i = 0
+	
+	for date in range(0,N_out):
+
+		d_updt = perDone(date,N_out,d)
+		d = d_updt + d
+		now = date + 100 # step each turn to fit
+		for beta in beta_fits_m.columns:
+
+			model = sm.tsa.AR(beta_fits_m.ix[:now,beta]).fit(maxlag=1,method='cmle')
+			try:
+				beta_predict_nieve.ix[date, beta] = model.predict(len(beta_fits_m.ix[:now,beta])-1,len(beta_fits_m.ix[:now,beta])).iloc[-1]
+				beta_predict_random.ix[date, beta] = beta_fits_m.ix[now-1,beta]+(beta_fits_m.ix[now-1,beta].std())*random.randn()
+
+			except KeyError:
+				pdb.set_trace()
+
+		try:
+
+			yield_forecast_nieve.ix[date,:] = beta_predict_nieve.ix[date, 'beta1'] + \
+	            beta_predict_nieve.ix[date, 'beta2']*_load2(asarray(maturities)) +\
+	            beta_predict_nieve.ix[date, 'beta3']*_load3(asarray(maturities))
+	            
+
+			yield_forecast_random.ix[date,:] = beta_predict_random.ix[date, 'beta1'] + \
+	            beta_predict_random.ix[date, 'beta2']*_load2(asarray(maturities)) +\
+	            beta_predict_random.ix[date, 'beta3']*_load3(asarray(maturities))
+	            
+
+		except TypeError:
+			pdb.set_trace()
+	        
+		i = i +1
+
+	return yield_forecast_nieve, yield_forecast_random
+
+
+def ARforecast(ratedata, beta_fits, N_out):
+
+	ratedata.index = pd.to_datetime(ratedata.index)
+	ratedata_m = ratedata.resample('MS').mean()
+
+	beta_fits.index = pd.to_datetime(beta_fits.index)
+	beta_fits_m = beta_fits.resample('MS').mean()
+
+	yield_forecast_nieve = pd.DataFrame(zeros((N_out, len(ratedata_m.columns))),  columns=ratedata_m.columns)
+
+	predict_delta_start = relativedelta(months=+1)
+	predict_delta_end = relativedelta(months=+N_out)
+
+	predict_start = predict_delta_start + pd.to_datetime(beta_fits_m.index[-1])
+	predict_end = predict_delta_end + pd.to_datetime(beta_fits_m.index[-1])
+
+	beta_predict_raw = {}
+
+	for beta in beta_fits_m.columns:
+		model = sm.tsa.AR(beta_fits_m.ix[:,beta]).fit(maxlag=1,method='cmle')
+		beta_predict_raw[beta] = model.predict(start=predict_start,end=predict_end,dynamic=False).iloc[:]
+
+	beta_predict_nieve = pd.DataFrame(beta_predict_raw)
+
+
+	for i in range(len(yield_forecast_nieve)): 
+		yield_forecast_nieve.ix[i,:] = beta_predict_nieve.ix[i, 'beta1'] + \
+			beta_predict_nieve.ix[i, 'beta2']*_load2(asarray(maturities)) +\
+			beta_predict_nieve.ix[i, 'beta3']*_load3(asarray(maturities))
+
+	yield_forecast_nieve.index = beta_predict_nieve.index
+
+	yield_forecast_nieve.index.name = "Date"
+	beta_predict_nieve.index.name = "Date"
+
+	return yield_forecast_nieve, beta_predict_nieve
+		
+
+
+def ARIMA_forecast (beta_series):
+
+	beta_series.index = pd.to_datetime(beta_series.index)
+
+	beta_series_m = beta_series.resample('MS').mean()
+	# beta_series_m.plot(figsize=(15, 6))
+	# plt.show()
+
+	# ARIMA Parameters
+	p = d = q = range(0, 2)
+	pdq = list(itertools.product(p, d, q))
+	seasonal_pdq = [(x[0], x[1], x[2], 12) for x in list(itertools.product(p, d, q))]
+
+	result_list = []
+	aic_list = []
+
+	for param in pdq:
+		for param_seasonal in seasonal_pdq:
+			try:
+				mod = sm.tsa.statespace.SARIMAX(beta_series_m,\
+                                            order=param,\
+                                            seasonal_order=param_seasonal,\
+                                            enforce_stationarity=False,\
+                                            enforce_invertibility=False)
+				results = mod.fit()
+				print('ARIMA{}x{}12 - AIC:{}'.format(param, param_seasonal, results.aic))
+				result_list.append({'param':param,'param_seasonal':param_seasonal,'aic':results.aic})
+				aic_list.append(results.aic)
+			except:
+				continue
+
+	select_result = list(filter(lambda x: x['aic'] == min(aic_list),result_list))[0]
+
+	mod = sm.tsa.statespace.SARIMAX(beta_series_m,\
+                                order = select_result['param'],\
+                                seasonal_order = select_result['param_seasonal'],\
+                                enforce_stationarity=False,\
+                                enforce_invertibility=False)
+	results = mod.fit()
+
+	# results.plot_diagnostics(figsize=(16, 8))
+	# plt.show()
+	pred_uc = results.get_forecast(steps=100)
+	pred_ci = pred_uc.conf_int()
+	ax = beta_series_m.plot(label='observed', figsize=(14, 7))
+	pred_uc.predicted_mean.plot(ax=ax, label='Forecast')
+	ax.fill_between(pred_ci.index,
+					pred_ci.iloc[:, 0],
+					pred_ci.iloc[:, 1], color='k', alpha=.25)
+	ax.set_xlabel('Date')
+	ax.set_ylabel('beta_prediction')
+
+	plt.legend()
+	plt.show()
+
+
+# beta_fits, residuals, ratedata = loadData()
+# yield_forecast,beta_forecast = ARforecast(ratedata, beta_fits, 240)
+
+
+# ARIMA_forecast (beta_fits['beta2'])

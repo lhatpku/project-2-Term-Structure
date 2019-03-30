@@ -53,6 +53,10 @@ function buildCharts() {
       legend: {"orientation": "h",},
       yaxis: {
         title: 'Yield Rate (%)'
+      },
+      xaxis:{
+        type: 'date',
+        "tickformat": "%Y-%m-%d"
       }
     };
     

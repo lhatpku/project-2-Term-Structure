@@ -8,11 +8,14 @@ from sqlalchemy import create_engine
 
 from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
-from term_structure_helper import loadData, fit_yield_curve
+from term_structure_helper import loadData, fit_yield_curve, ARforecast
 
 app = Flask(__name__)
 
 beta_fits, residuals, ratedata = loadData()
+yield_forecast,beta_forecast = ARforecast(ratedata, beta_fits, 240)
+
+beta_all = pd.concat([beta_fits,beta_forecast],axis=0)
 
 maturities_fit = np.asarray([1,2,3,6,12,24,36,60,84,120,240,360]) 
 materities_html = []
@@ -29,15 +32,15 @@ def index():
 
 @app.route("/yields")
 def yields():
-    """Return a list of sample names."""
-
-    yield_fits = fit_yield_curve(beta_fits,maturities_fit)
+    """Return the yields to plot"""
+    yield_fits = fit_yield_curve(beta_all,maturities_fit)
     yield_fits.reset_index(inplace = True)
     # Return a list of the column names (sample names)
     return yield_fits.to_json(orient='records')
 
 @app.route("/betas")
 def betas():
+    """Return Fitting Information"""
     beta_fits_plot = pd.concat([beta_fits, ratedata], axis=1, join_axes=[beta_fits.index])
     beta_fits_plot_reset = beta_fits_plot.reset_index()
     # Return a list of the column names (sample names)

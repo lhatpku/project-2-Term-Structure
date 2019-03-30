@@ -2,11 +2,11 @@ header{
     background: url(https://static1.squarespace.com/static/555008b3e4b0c62a575b8762/t/556c9751e4b072fc1ba8103d/1433179986764/CPE-Calculator-and-Pen-2.jpg?format=2500w);
     background-size: cover;
     background-position: center;
-    min-height: 300px;    
+    min-height: 500px;    
 }
 @media screen and (max-width: 670px){
 header{
-    min-height: 200px;
+    min-height: 300px;
 }
 }
 .section{
