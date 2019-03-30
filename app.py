@@ -34,8 +34,8 @@ def chart_3d():
     """Return the 3d chart page."""
     return render_template("chart-3d.html")
 
-@app.route("/yields")
-def yields():
+@app.route("/monthly_yields")
+def yields_monthly():
     """Return the yields to plot"""
     beta_fits_monthly = beta_fits.resample('MS').mean()
     monthly_data = fit_yield_curve(beta_fits_monthly, maturities_fit)
@@ -43,8 +43,8 @@ def yields():
     return monthly_data.to_json(orient='records')
 
 
-@app.route("/monthly_yields")
-def yields_monthly():
+@app.route("/yields")
+def yields():
     """Return the yields to plot"""
     yield_fits = fit_yield_curve(beta_all,maturities_fit)
     yield_fits.reset_index(inplace = True)
