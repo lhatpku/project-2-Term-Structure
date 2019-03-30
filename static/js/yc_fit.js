@@ -158,13 +158,13 @@ d3.json(url).then(function(beta_data){
     var dataset = yield_rate_output_list.map((d) => {
         d.Data = d.Data;
         d.Beta = d.Beta
-        d.Date = parseDate(d.Date);
+        d.Date = d.Date;
         return d;
     });
 
     var dataset_raw = yield_rate_raw_list.map((d) => {
         d.Data = d.Data;
-        d.Date = parseDate(d.Date);
+        d.Date = d.Date;
         return d;
     });
 

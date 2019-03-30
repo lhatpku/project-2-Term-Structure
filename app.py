@@ -28,8 +28,7 @@ for maturity in maturities_fit:
 def index():
     """Return the homepage."""
     return render_template("index.html",maturities = materities_html)
-
-
+    
 @app.route("/yields")
 def yields():
     """Return the yields to plot"""
