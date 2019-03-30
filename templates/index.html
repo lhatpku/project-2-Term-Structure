@@ -12,7 +12,6 @@
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
   <link rel="stylesheet" href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css">
-  <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/yc_fit.css') }}">
   <title>Yield Curve Dashboard</title>
@@ -31,14 +30,14 @@
           <li class="light-blue lighten-1 tooltipped" data-tooltip="Fitting"><a href="#fitting"><i class="material-icons">video_library</i></a></li>
           <li class="light-blue lighten-1 tooltipped" data-tooltip="Prediction"><a href="#predict"><i class="material-icons">forward</i></a></li>
           <li class="light-blue lighten-1 tooltipped" data-tooltip="Time Series"><a href="#timeseries"><i class="material-icons">timeline</i></a></li>
-          <li class="light-blue lighten-1 tooltipped" data-tooltip="3d Yield Curve"><a href="#3d-chart"><i class="material-icons">3d_rotation</i></a></li>
+          <li class="light-blue lighten-1 tooltipped" data-tooltip="3d Yield Curve"><a href="/3d"><i class="material-icons">3d_rotation</i></a></li>
           <li class="light-blue lighten-1 tooltipped" data-tooltip="Economy Indicator"><a href="#economy"><i class="material-icons">insert_chart</i></a></li>
         </ul>
         <ul class="sidenav grey lighten-2" id="mobile-menu">
           <li><a href="#fitting"><i class="material-icons">video_library</i></a></li>
           <li><a href="#predict"><i class="material-icons">forward</i></a></li>
           <li><a href="#timeseries"><i class="material-icons">timeline</i></a></li>
-          <li><a href="#3d-chart"><i class="material-icons">3d_rotation</i></a></li>
+          <li><a href="/3d"><i class="material-icons">3d_rotation</i></a></li>
           <li><a href="#economy"><i class="material-icons">insert_chart</i></a></li>
         </ul>
       </div>
@@ -192,19 +191,6 @@
     </div>
   </div>
 
-  <section class="container section scrollspy" id="3d-chart">
-
-      <div class="canvas" id="3d-chart"></div>
-  
-  </section>
-
-  <!-- Parallax -->
-  <div class="parallax-container">
-    <div class="parallax">
-      <img src="http://www.acbnews.com.au/uploadfile/2018/0706/20180706083940134.jpg" alt="" class="responsive-img">
-    </div>
-  </div>
-
   <section class="container section scrollspy" id="economy">
 
     <div class="row">
@@ -215,7 +201,15 @@
     </div>
 
   </section>
-  
+
+
+  <!-- Parallax -->
+  <div class="parallax-container">
+    <div class="parallax">
+      <img src="http://www.acbnews.com.au/uploadfile/2018/0706/20180706083940134.jpg" alt="" class="responsive-img">
+    </div>
+  </div>
+
 
   <footer class="page-footer grey darken-3">
     <div class="container">
@@ -263,14 +257,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-core.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-surface.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
   <script src="{{ url_for('static', filename='js/yc_time_series.js') }}"></script>
   <script src="{{ url_for('static', filename='js/yc_predict.js') }}"></script>
   <script src="{{ url_for('static', filename='js/yc_fit.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/yc_3d.js') }}"></script>
   <script src="{{ url_for('static', filename='js/yc_economy.js') }}"></script>
 </body>
 

@@ -29,6 +29,11 @@ def index():
     """Return the homepage."""
     return render_template("index.html",maturities = materities_html)
 
+@app.route("/3d")
+def chart_3d():
+    """Return the 3d chart page."""
+    return render_template("chart-3d.html")
+
 @app.route("/yields")
 def yields():
     """Return the yields to plot"""
