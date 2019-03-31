@@ -1,14 +1,12 @@
 import pandas as pd
 import numpy as np
 import datetime as dt
+import matplotlib.pylab as plt
 import os
 import sqlite3
 from sqlite3 import Error
-import itertools
-from dateutil.relativedelta import *
 from term_structure_helper import loadData
 import statsmodels.formula.api as sm
-from scipy.optimize import lsq_linear
 from scipy.optimize import minimize
 
 
@@ -78,8 +76,8 @@ def get_spot_rate (betas,maturity):
 
     return zc_bond_spot_rate.dropna()
 
-
-def fit_bond_return (bonds_dict,ticker,betas,maturity_list):
+# Use zero coupon bond spot rates to fit ETF bond returns
+def fit_bond_return (bonds_dict,ticker,betas,maturity_list,json=0):
 
     bond_returns = get_monthly_return (bonds_dict,ticker)
 
@@ -116,14 +114,44 @@ def fit_bond_return (bonds_dict,ticker,betas,maturity_list):
     xinit = np.ones(len(zc_columns)) * (1/len(zc_columns))
 
     res = minimize(fun=obj_fun, args=(y, X), x0=xinit, bounds=bnds, constraints=cons)
-    return res
+    fit_params_list = res.x
+
+    fit_params = []
+
+    for i in range(len(maturity_list)):
+        fit_params.append({"maturity":maturity_list[i],"param":fit_params_list[i]})
+
+    y_fit = X.dot(fit_params_list)
+
+    result = {}
+
+    result['params'] = fit_params
+    if json == 1:
+        y_fit_df = pd.DataFrame({'Date':y_fit.index, 'return':y_fit.values})
+        y_df = pd.DataFrame({'Date':y.index, 'return':y.values})
+        result['y_fit'] = y_fit_df.to_dict(orient='records')
+        result['y'] = y_df.to_dict(orient='records')
+    else:
+        result['y_fit'] = y_fit
+        result['y'] = y
+
+    return result
 
 
-
-# beta_fits, residuals, ratedata = loadData()
 # bonds_dict = load_bond()
-# result = fit_bond_return(bonds_dict,'SHV',beta_fits,[3,6,12,24,36,48,60])
+# beta_fits, residuals, ratedata = loadData()
 
-# print(result.x)
+# ETF_short_tickers = ['SHV','VGSH']
+# ETF_long_tickers = ['DTYL','TLH']
 
+# maturity_short_list = [3,6,12,24,36,48,60]
+# maturity_long_list = [72,84,96,108,120,132,144,156,168,180,192,204,216,228,240]
 
+# ETF_results = {}
+# for i_ticker in ETF_short_tickers:
+#     print(i_ticker)
+#     ETF_results[i_ticker] = fit_bond_return(bonds_dict,i_ticker,beta_fits,maturity_short_list)
+
+# for i_ticker in ETF_long_tickers:
+#     print(i_ticker)
+#     ETF_results[i_ticker] = fit_bond_return(bonds_dict,i_ticker,beta_fits,maturity_long_list)
