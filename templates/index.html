@@ -83,8 +83,10 @@
           <li>
             <div class="collapsible-header"><i class="material-icons">description</i>Nelson-Siegel Framework</div>
             <div class="collapsible-body blue lighten-3">
-              <p> When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
-                  $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$</p>
+              <p> The Nelson and Siegel functional form, which is a convenient and parsimonious three-component exponential approximation. The Nelson–Siegel forward rate curve can be viewed as a polynomial times an exponential decay term and is a popular mathematical approximating function.
+                  The corresponding yield curve is :
+                  $$ y_t(\tau) = \beta_{1t} + \beta_{2t}(\frac{1 - e^{-\lambda_t\tau}}{\lambda_t\tau}) ...$$
+                            $$ + \beta_{3t} (\frac{1 - e^{-\lambda_t\tau}}{\lambda_t\tau} - e^{-\lambda_t\tau})$$</p>
             </div>
           </li>
           <li>
@@ -146,7 +148,7 @@
 
   <section class="container section scrollspy" id="timeseries">
     <div class="row">
-      <div class="col s12 m4">
+      <div class="col s12 m3">
         <form class="card z-depth-2">
           <div class="card-content">
             <span class="card-title red-text text-accent-4 center-align">Select to Plot</span>
@@ -158,7 +160,7 @@
                 <option value="{{maturity.value}}" >{{maturity.text}}</option>
                 {% endfor %}
               </select>
-              <label>Select Years to Maturity (M):</label>
+              <label>Years to Maturity (M):</label>
             </div>
             <div class="input-field">
               <i class="material-icons prefix">date_range</i>
@@ -178,7 +180,7 @@
           </div>
         </form>
       </div>
-      <div class="col s12 m8">
+      <div class="col s12 m8 offset-m1">
         <div class="canvas" id="timeseries-chart"></div>
       </div>
     </div>
@@ -197,14 +199,53 @@
 
   <section class="container section scrollspy" id="bonds-fit">
 
+    <form name="ETFs" class="center row">
+      <p class = "radio-btn">
+        <label>
+          <input name="ETF" type="radio" checked value="SHV">
+          <span>SHV</span>
+        </label>
+      </p>
+      <p class="radio-btn">
+        <label>
+          <input name="ETF" type="radio" value="VGSH">
+          <span>VGSH</span>
+        </label>
+      </p>
+      <p class = "radio-btn">
+        <label>
+          <input name="ETF" type="radio" value="TLH">
+          <span>TLH</span>
+        </label>
+      </p>
+    </form>
+
     <div class="row">
 
-      <div class="col s12 m6">
+      <div class="col s12 m4">
+
+          <div class="card-panel hoverable"> Something about the years to maturity as the average
+            maturity of all the zero coupon bonds the ETF is allocated to. 
+          </div>  
+
+      </div>
+
+      <div class="col s12 m8">
           <div class="canvas" id="bonds-fit-pie"></div>
       </div>
 
-      <div class="col s12 m6">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="row">
+
+      <div class="col s12 m8">
         <div class="canvas" id="bonds-fit-line"></div>
+      </div>
+
+      <div class="col s12 m4">
+        <div class="card-panel hoverable"> The graph shows high correlation of the fitted bond returns versus ETF historical returns </div> 
       </div>
 
     </div>

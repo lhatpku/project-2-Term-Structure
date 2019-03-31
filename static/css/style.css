@@ -22,10 +22,10 @@ header{
 
 
 hr {
-    border: dotted #745048;
+    border: dotted #745048 5px;
     border-bottom: none;
     height: 0px;
-    width:12%;
+    width: 16%;
     margin: 100px auto;
     
 }
@@ -43,7 +43,6 @@ header{
     position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 0;
-    z-index: 999;
 }
 
 /* Slideshow */
@@ -117,4 +116,10 @@ header{
   @keyframes fade {
     from {opacity: .4} 
     to {opacity: 1}
+  }
+
+  .radio-btn {
+
+    display: inline;
+
   }

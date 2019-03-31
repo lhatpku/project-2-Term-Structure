@@ -1,8 +1,9 @@
 var url = `/bonds_fit`;
+var radios = document.forms["ETFs"].elements["ETF"];
 
-d3.json(url).then(function(bonds_fit_data){
+function drawchart(data,ticker) {
 
-    var bond_line_data = bonds_fit_data['TLH']
+    var bond_line_data = data[ticker]
 
     var bond_line_series1 = bond_line_data['y_fit'].map(d => [d.Date,Math.round(d.return*100000)/100000]);
     var bond_line_series2 = bond_line_data['y'].map(d => [d.Date,Math.round(d.return*100000)/100000]);
@@ -83,7 +84,19 @@ d3.json(url).then(function(bonds_fit_data){
         }]
     });
 
+};
 
+d3.json(url).then(function(bonds_fit_data){
+
+    drawchart(bonds_fit_data,'SHV')
+
+    for(var i = 0, max = radios.length; i < max; i++) {
+        
+        radios[i].onclick = function() {
+            selected_ticker = this.value;
+            drawchart(bonds_fit_data,selected_ticker);
+        }
+    }
 
 });
 
