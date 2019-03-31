@@ -4,21 +4,34 @@ image_2 = 'https://www.strath.ac.uk/media/1newwebsite/departmentsubject/mathemat
 image_3 = 'http://www.acbnews.com.au/uploadfile/2018/0706/20180706083940134.jpg';
 
 var images = new Array(image_1,image_2,image_3);
-var nextimage=0;
 
 var slideIndex = 1;
-showDivs(slideIndex);
+showSlides(slideIndex);
 
-function plusDivs(n) {
-  showDivs(slideIndex += n);
+// Next/previous controls
+function plusSlides(n) {
+  showSlides(slideIndex += n);
 }
 
-function showDivs(n) {
+// Thumbnail image controls
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
   var i;
 
+  var dots = document.getElementsByClassName("dot");
   if (n > images.length) {slideIndex = 1} 
-  if (n < 1) {slideIndex = images.length} ;
+  if (n < 1) {slideIndex = images.length}
+  
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" dot-active", "");
+  }
 
   $("#background")
-    .attr("style", "background-image: url("+images[slideIndex-1]+");background-size: 100%; height: 100%;");
+        .attr("style", "background-image: url("+images[slideIndex-1]+");background-size: 100%; height: 100%;");
+
+  dots[slideIndex-1].className += " dot-active";
+
 }

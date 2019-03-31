@@ -19,15 +19,12 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_SVG" async>
   </script>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <style>
-    .mySlides {display:none}
-  </style>
 </head>
   
 <body class="grey lighten-2">
 
   <header id = "background">
-    <nav class="nav-wrapper transparent">
+    <nav class="nav-wrapper transparent sticky">
       <div class="container">
         <a href="" class="brand-logo">Yield Curve Dashboard</a>
         <a href="" class="sidenav-trigger" data-target="mobile-menu">
@@ -49,13 +46,17 @@
         </ul>
       </div>
     </nav>
-    <div class="w3-center">
-      <div class="w3-section">
-        <button class="w3-button w3-light-grey" onclick="plusDivs(-1)">❮ Prev</button>
-        <button class="w3-button w3-light-grey" onclick="plusDivs(1)">Next ❯</button>
-      </div>
-    </div>
+
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+   
   </header>
+
+  <div style="text-align:center">
+    <span class="dot" onclick="currentSlide(1)"></span> 
+    <span class="dot" onclick="currentSlide(2)"></span> 
+    <span class="dot" onclick="currentSlide(3)"></span> 
+  </div>
   
   <section class="container section scrollspy" id="fitting">
     <div class="row">
