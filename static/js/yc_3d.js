@@ -105,7 +105,7 @@ anychart.onDocumentReady(function() {
         // chart.zAxis().stroke('#000');
     
         // display chart
-        chart.container('chart').draw();
+        chart.container('container').draw();
 
         
     });
