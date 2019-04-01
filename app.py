@@ -22,9 +22,9 @@ for maturity in maturities_fit:
 
 
 @app.route("/")
-def index():
+def chart():
     """Return the homepage."""
-    return render_template("index.html",maturities = materities_html)
+    return render_template("3d_chart.html",maturities = materities_html)
 
 
 @app.route("/yields")
@@ -41,6 +41,39 @@ def betas():
     beta_fits_reset = beta_fits.reset_index()
     # Return a list of the column names (sample names)
     return beta_fits_reset.to_json(orient='records')
+
+
+@app.route("/monthly_yields")
+def yields_monthly():
+     beta_fits_plot = pd.concat([beta_fits, ratedata], axis=1, join_axes=[beta_fits.index])
+     beta_fits_plot_reset = beta_fits_plot.reset_index()
+     records=beta_fits_plot_reset.to_dict('records')
+     lam_t = .0609
+     maturities_output = list(range(3,363,6))
+
+     yield_rates=[]
+     maturity=[]
+     date=[]
+
+     for item in records:
+          for y in maturities_output:
+               load2 = (1. - math.exp(-lam_t*y)) / (lam_t*y);
+               load3 = ((1.- math.exp(-lam_t*y)) / (lam_t*y)) - math.exp(-lam_t*y);
+
+               yield_rate = item['beta1'] + item['beta2'] * load2 + item['beta3'] * load3;
+
+               yield_rates.append(yield_rate)
+               maturity.append(y)
+               date.append(item['Date'])
+
+     df=pd.DataFrame({'yield_rates':yield_rates, 'maturity': maturity, 'Date':pd.to_datetime(date)})
+
+     df['Date']=df['Date'].dt.to_period('Y')
+
+     gb=df.groupby(['maturity','Date']).mean()
+     df1=gb.reset_index()
+
+     return df1.to_json(orient='records')
 
 if __name__ == "__main__":
     app.run()
