@@ -19,6 +19,7 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_SVG" async>
   </script>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link href="https://fonts.googleapis.com/css?family=Merriweather|Montserrat|Sacramento|Slabo+27px" rel="stylesheet">
 </head>
   
 <body class="grey lighten-2">
@@ -65,15 +66,15 @@
       <div class="col s12 m4">
         <ul class="collapsible">
           <li>
-            <div class="collapsible-header"><i class="material-icons">information</i>What do you know about Yield Curve?</div>
-            <div class="collapsible-body blue lighten-3"><span>A yield curve is a line that plots the interest rates, at a set point in time, of bonds having equal credit quality but differing maturity dates. 
+            <div class="collapsible-header"><i class="material-icons">information</i>What is Yield Curve?</div>
+            <div class="collapsible-body blue-grey lighten-3"><span>A yield curve is a line that plots the interest rates, at a set point in time, of bonds having equal credit quality but differing maturity dates. 
                 The most frequently reported yield curve compares the three-month, two-year, five-year, 10-year and 30-year U.S. Treasury debt. 
                 This yield curve is used as a benchmark for other debt in the market, 
                 such as mortgage rates or bank lending rates, and it is used to predict changes in economic output and growth.</span></div>
           </li>
           <li>
             <div class="collapsible-header"><i class="material-icons">question_answer</i>Why Nelson–Siegel framework?</div>
-            <div class="collapsible-body blue lighten-3"><span>Here we introduce a novel twist of interpretation,
+            <div class="collapsible-body blue-grey lighten-3"><span>Here we introduce a novel twist of interpretation,
                 showing that the three coefficients in the Nelson–Siegel curve may be interpreted as
                 latent level, slope and curvature factors. We also argue that the nature of the factors
                 and factor loadings implicit in the Nelson–Siegel model facilitate consistency with
@@ -82,7 +83,7 @@
           </li>
           <li>
             <div class="collapsible-header"><i class="material-icons">description</i>Nelson-Siegel Framework</div>
-            <div class="collapsible-body blue lighten-3">
+            <div class="collapsible-body blue-grey lighten-3">
               <p> The Nelson and Siegel functional form, which is a convenient and parsimonious three-component exponential approximation. The Nelson–Siegel forward rate curve can be viewed as a polynomial times an exponential decay term and is a popular mathematical approximating function.
                   The corresponding yield curve is :
                   $$ y_t(\tau) = \beta_{1t} + \beta_{2t}(\frac{1 - e^{-\lambda_t\tau}}{\lambda_t\tau}) ...$$
@@ -91,7 +92,7 @@
           </li>
           <li>
             <div class="collapsible-header"><i class="material-icons">view_compact</i>Nelson-Siegel Fitting Parameters.</div>
-            <div class="collapsible-body blue lighten-3">
+            <div class="collapsible-body blue-grey lighten-3">
               <table class="highlight">
                 <thead>
                   <tr>
@@ -124,23 +125,25 @@
       <div class="col s12 m4 offset-m1">
         <ul class="tabs">
           <li class="tab col s6">
-            <a href="#fact1" class="indigo-text text-darken-4"><i class="material-icons center">first_page</i></a>
+            <a href="#fact1" class="deep-purple-text text-darken-3"><i class="material-icons center left">comment</i>Details</a>
           </li>
           <li class="tab col s6">
-              <a href="#fact2" class="indigo-text text-darken-4"><i class="material-icons center">last_page</i></a>
+              <a href="#fact2" class="deep-purple-text text-darken-3"><i class="material-icons center left">comment</i>Extension</a>
           </li>
         </ul>
         <div class="col s12" id="fact1">
-          <p class="flow-text indigo-text text-darken-4">Model Details</p>
+          <p class="deep-purple-text text-darken-3" style="font-family: 'Slabo 27px', serif; font-size: 1.5rem">Model Details</p>
           <p>After fitting the observed yield curves to the Nelson-Siegel curves, we will forecast the whole yield curves by forecasting the evolution of the parameters. 
             Specifically, Diebold and Li reject the use of a VAR model since there is little cross-variable interaction between parameters, 
             and the truism that unrestricted VAR models tend to produce forecasts of economic variables. 
             Instead in this project we choose to stack three independent AR(1) models.</p>
         </div>
         <div class="col s12" id="fact2">
-          <p class="flow-text indigo-text text-darken-4">Model Extension</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p class="deep-purple-text text-darken-3" style="font-family: 'Slabo 27px', serif; font-size: 1.5rem">Model Extension</p>
+          <p>The model can be used to generate random yield rates and further bond returns (see analysis below) that can predict the future returns
+            of portfolios that have treasury bonds exposure. For that purpose, we can add random noise in the time-series forecast to capture future uncertainties.
+            In addition, The model can be extended to use some better time series model that can capture some market cycles. 
+          </p>
         </div>
       </div>
     </div>
@@ -192,7 +195,11 @@
       <div class="col s12 m8">
           <div class="canvas" id="economy-chart"></div>
       </div>
-      <div class="col s12 m3 offset-m1"></div>
+      <div class="col s12 m3 offset-m1">
+        <div class="card-panel hoverable"> 
+          Something about how yield curve will be related to GDP and S&P index.
+        </div>  
+      </div>
     </div>
 
   </section>
@@ -224,8 +231,11 @@
 
       <div class="col s12 m4">
 
-          <div class="card-panel hoverable"> Something about the years to maturity as the average
-            maturity of all the zero coupon bonds the ETF is allocated to. 
+          <div class="card-panel hoverable"> 
+            <p id="ETF-summary" style="font-family: 'Slabo 27px', serif; font-size: 1.5rem"></p>
+            <p>The model fits the bond ETF to several zero coupon bonds derived by yield curve using least square optimization. The weighted maturity 
+              based on the analysis is <span id="weighted-maturity" class = "deep-orange-text text-accent-1"></span> years. 
+            </p>
           </div>  
 
       </div>
@@ -245,7 +255,10 @@
       </div>
 
       <div class="col s12 m4">
-        <div class="card-panel hoverable"> The graph shows high correlation of the fitted bond returns versus ETF historical returns </div> 
+        <div class="card-panel hoverable"> 
+          <p style="font-family: 'Slabo 27px', serif; font-size: 1.5rem">Fitting Results</p>
+          <p>The chart shows high correlation of the fitted bond returns (weighted returns from multiple zeros coupon bonds) versus ETF historical returns</p>
+        </div> 
       </div>
 
     </div>
