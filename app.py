@@ -5,10 +5,9 @@ import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
-
+import math
 from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
-
 from term_structure_helper import loadData, fit_yield_curve, ARforecast
 from bond_price_helper import load_bond, fit_bond_return
 
@@ -50,7 +49,7 @@ def index():
 @app.route("/3d")
 def chart_3d():
     """Return the 3d chart page."""
-    return render_template("chart-3d.html")
+    return render_template("chart_3d.html")
 
 @app.route("/monthly_yields")
 def yields_monthly():
@@ -89,6 +88,39 @@ def betas_all():
 def bonds_fit():
     """Bond Fitting"""
     return jsonify(ETF_results)
+
+@app.route("/annual_yields")
+def yields_annual():
+    beta_fits_plot = pd.concat([beta_fits, ratedata], axis=1, join_axes=[beta_fits.index])
+    beta_fits_plot_reset = beta_fits_plot.reset_index()
+    records=beta_fits_plot_reset.to_dict('records')
+    lam_t = .0609
+    maturities_output = list(range(3,363,6))
+
+    yield_rates=[]
+    maturity=[]
+    date=[]
+
+    for item in records:
+         for y in maturities_output:
+              load2 = (1. - math.exp(-lam_t*y)) / (lam_t*y)
+              load3 = ((1.- math.exp(-lam_t*y)) / (lam_t*y)) - math.exp(-lam_t*y)
+
+              yield_rate = item['beta1'] + item['beta2'] * load2 + item['beta3'] * load3
+
+              yield_rates.append(yield_rate)
+              maturity.append(y)
+              date.append(item['Date'])
+
+    df=pd.DataFrame({'yield_rates':yield_rates, 'maturity': maturity, 'Date':pd.to_datetime(date)})
+
+    df['Date']=df['Date'].dt.to_period('Y')
+
+    gb=df.groupby(['maturity','Date']).mean()
+    df1=gb.reset_index()
+
+    return df1.to_json(orient='records')
+
 
 if __name__ == "__main__":
     app.run()
