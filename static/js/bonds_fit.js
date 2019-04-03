@@ -9,8 +9,8 @@ function drawchart(data,ticker) {
 
     var bond_line_data = data[ticker]
 
-    var bond_line_series1 = bond_line_data['y_fit'].map(d => [d.Date,Math.round(d.return*100000)/100000]);
-    var bond_line_series2 = bond_line_data['y'].map(d => [d.Date,Math.round(d.return*100000)/100000]);
+    var bond_line_series1 = bond_line_data['y_fit'].map(d => [new Date(d.Date).valueOf() ,Math.round(d.return*100000)/100000]);
+    var bond_line_series2 = bond_line_data['y'].map(d => [new Date(d.Date).valueOf() ,Math.round(d.return*100000)/100000]);
 
     var pie_plot_pair = bond_line_data['params'].filter(d => d.param >= 0.01).map(d => ['YTM - '+d.maturity/12,d.param]);
 
@@ -29,6 +29,11 @@ function drawchart(data,ticker) {
         },
         xAxis: {
             type: 'datetime',
+            labels: {
+                formatter: function() {
+                  return new Date(this.value).toLocaleDateString();
+                }
+            },
             title: {
               text: 'Date'
             }
@@ -48,7 +53,7 @@ function drawchart(data,ticker) {
                 name: "ETF Returns",
                 data: bond_line_series2
             },
-           
+
         ]
     });
 
@@ -103,7 +108,7 @@ d3.json(url).then(function(bonds_fit_data){
     d3.select("#weighted-maturity").text(Math.round(weighted_maturity*10000)/10000);
 
     for(var i = 0, max = radios.length; i < max; i++) {
-        
+
         radios[i].onclick = function() {
 
             selected_ticker = this.value;
@@ -114,11 +119,10 @@ d3.json(url).then(function(bonds_fit_data){
                 weighted_maturity = weighted_maturity + (d.maturity * d.param) / 12;
             });
             d3.select("#weighted-maturity").text(Math.round(weighted_maturity*10000)/10000);
-            
+
             drawchart(bonds_fit_data,selected_ticker);
             d3.select("#ETF-summary").text(description_dict[selected_ticker]);
         }
     }
 
 });
-

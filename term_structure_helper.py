@@ -2,16 +2,10 @@ import pandas as pd
 from numpy import *
 import statsmodels.api as sm
 import matplotlib.pylab as plt
-import plotly.graph_objs as go
-import plotly as py
-import cufflinks as cf
 import datetime as dt
-import seaborn as sns
 from sklearn import linear_model
-from plotly.offline import download_plotlyjs, init_notebook_mode, iplot
 import scipy
 import os
-import pywt
 import sqlite3
 from sqlite3 import Error
 import warnings

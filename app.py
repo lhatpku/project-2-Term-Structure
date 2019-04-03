@@ -1,13 +1,7 @@
 import os
 import pandas as pd
 import numpy as np
-import sqlalchemy
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
-from sqlalchemy import create_engine
-import math
 from flask import Flask, jsonify, render_template
-from flask_sqlalchemy import SQLAlchemy
 from term_structure_helper import loadData, fit_yield_curve, ARforecast
 from bond_price_helper import load_bond, fit_bond_return
 
@@ -103,8 +97,8 @@ def yields_annual():
 
     for item in records:
          for y in maturities_output:
-              load2 = (1. - math.exp(-lam_t*y)) / (lam_t*y)
-              load3 = ((1.- math.exp(-lam_t*y)) / (lam_t*y)) - math.exp(-lam_t*y)
+              load2 = (1. - np.exp(-lam_t*y)) / (lam_t*y)
+              load3 = ((1.- np.exp(-lam_t*y)) / (lam_t*y)) - np.exp(-lam_t*y)
 
               yield_rate = item['beta1'] + item['beta2'] * load2 + item['beta3'] * load3
 

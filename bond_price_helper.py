@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import datetime as dt
-import matplotlib.pylab as plt
 import os
 import sqlite3
 from sqlite3 import Error
