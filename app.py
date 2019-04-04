@@ -4,40 +4,30 @@ import numpy as np
 from flask import Flask, jsonify, render_template
 from term_structure_helper import loadData, fit_yield_curve, ARforecast
 from bond_price_helper import load_bond, fit_bond_return
+from sqlalchemy import create_engine
 
 app = Flask(__name__)
 
-################### Analysis ###################
-beta_fits, residuals, ratedata = loadData()
-bonds_dict = load_bond()
-
-ETF_short_tickers = ['SHV','VGSH']
-ETF_long_tickers = ['TLH']
-
-maturity_short_list = [3,6,12,24,36,48,60]
-maturity_long_list = [72,84,96,108,120,132,144,156,168,180,192,204,216,228,240]
-
-ETF_results = {}
-for i_ticker in ETF_short_tickers:
-    ETF_results[i_ticker] = fit_bond_return(bonds_dict,i_ticker,beta_fits,maturity_short_list,1)
-
-for i_ticker in ETF_long_tickers:
-    ETF_results[i_ticker] = fit_bond_return(bonds_dict,i_ticker,beta_fits,maturity_long_list,1)
-
-yield_forecast,beta_forecast = ARforecast(ratedata, beta_fits, 240)
 ################## Data Prepare ######################
-beta_all = pd.concat([beta_fits,beta_forecast],axis=0)
+engine = create_engine('sqlite:///db/agg.sqlite', echo=False)
+
+bonds_prices = pd.read_sql('select * from bonds', con=engine)
+bonds_dict = load_bond(bonds_prices)
+
+ratedata = pd.read_sql('select * from ratedata', con=engine)
+ratedata.set_index('Date',inplace=True)
+
+beta_fits = pd.read_sql('select * from betas', con=engine)
+beta_fits.set_index('Date',inplace=True)
 
 maturities_fit = np.asarray([1,2,3,6,12,24,36,60,84,120,240,360]) 
-materities_html = []
-
-for maturity in maturities_fit:
-     materities_html.append({"value":f"{maturity}","text":f"{maturity}"})
 
 ################## Routes ######################
 @app.route("/")
 def index():
-    """Return the homepage."""
+    materities_html = []
+    for maturity in maturities_fit:
+        materities_html.append({"value":f"{maturity}","text":f"{maturity}"})
     return render_template("index.html",maturities = materities_html)
 
 @app.route("/3d")
@@ -57,6 +47,8 @@ def yields_monthly():
 @app.route("/yields")
 def yields():
     """Return the yields to plot"""
+    yield_forecast,beta_forecast = ARforecast(ratedata, beta_fits, 240)
+    beta_all = pd.concat([beta_fits,beta_forecast],axis=0)
     yield_fits = fit_yield_curve(beta_all,maturities_fit)
     yield_fits.reset_index(inplace = True)
     # Return a list of the column names (sample names)
@@ -74,6 +66,8 @@ def betas():
 @app.route("/betas_all")
 def betas_all():
     """Return Prediction Information"""
+    yield_forecast,beta_forecast = ARforecast(ratedata, beta_fits, 240)
+    beta_all = pd.concat([beta_fits,beta_forecast],axis=0)
     beta_all_output = beta_all.reset_index()
     # Return a list of the column names (sample names)
     return beta_all_output.to_json(orient='records')
@@ -81,6 +75,18 @@ def betas_all():
 @app.route("/bonds_fit")
 def bonds_fit():
     """Bond Fitting"""
+    ETF_short_tickers = ['SHV','VGSH']
+    ETF_long_tickers = ['TLH']
+    maturity_short_list = [3,6,12,24,36,48,60]
+    maturity_long_list = [72,84,96,108,120,132,144,156,168,180,192,204,216,228,240]
+
+    ETF_results = {}
+    for i_ticker in ETF_short_tickers:
+        ETF_results[i_ticker] = fit_bond_return(bonds_dict,i_ticker,beta_fits,maturity_short_list,1)
+
+    for i_ticker in ETF_long_tickers:
+        ETF_results[i_ticker] = fit_bond_return(bonds_dict,i_ticker,beta_fits,maturity_long_list,1)
+
     return jsonify(ETF_results)
 
 @app.route("/annual_yields")

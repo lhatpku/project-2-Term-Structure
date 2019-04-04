@@ -9,17 +9,16 @@ import statsmodels.formula.api as sm
 from scipy.optimize import minimize
 
 
-def load_bond():
+def load_bond(bonds_prices):
 
-    __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    # __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-    loc = os.path.join(__location__ + '/Data/bond_prices.db')
+    # loc = os.path.join(__location__ + '/Data/bond_prices.db')
 
-    conn = sqlite3.connect(loc)
-    bonds_prices = pd.read_sql('select * from bond_prices', conn)
+    # conn = sqlite3.connect(loc)
+    # bonds_prices = pd.read_sql('select * from bond_prices', conn)
 
     bond_names = bonds_prices['Ticker'].unique()
-
     bonds_dict = {}
 
     for bond_name in bond_names:
@@ -39,6 +38,7 @@ def get_monthly_return (bonds_dict,ticker):
     bond_price_monthly_clean = bond_price_monthly[bond_price_monthly.index > last_notna_index]
 
     bond_return_monthly = bond_price_monthly_clean.pct_change(1).dropna()
+    print(bond_return_monthly)
 
     return bond_return_monthly
 
