@@ -14,11 +14,11 @@ anychart.onDocumentReady(function() {
                     data.push([x,y,z])
                 })
 
-        console.log(data)
+        // console.log(data)
         // create chart
         var chart = anychart.surface(data)
 
-        console.log("surface")
+        // console.log("surface")
     
         chart.title('3D Surface Plot of Yield Rates Over Time');
 
@@ -105,7 +105,7 @@ anychart.onDocumentReady(function() {
         // chart.zAxis().stroke('#000');
     
         // display chart
-        chart.container('container').draw();
+        chart.container('chart-3d').draw();
 
         
     });
