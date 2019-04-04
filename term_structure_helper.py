@@ -1,7 +1,6 @@
 import pandas as pd
 from numpy import *
 import statsmodels.api as sm
-import matplotlib.pylab as plt
 import datetime as dt
 from sklearn import linear_model
 import scipy
@@ -13,7 +12,6 @@ import itertools
 from dateutil.relativedelta import *
 
 warnings.filterwarnings("ignore")
-plt.style.use('fivethirtyeight')
 
 # matplotlib.rcParams['axes.labelsize'] = 14
 # matplotlib.rcParams['xtick.labelsize'] = 12
@@ -280,18 +278,6 @@ def ARIMA_forecast (beta_series):
 
 	# results.plot_diagnostics(figsize=(16, 8))
 	# plt.show()
-	pred_uc = results.get_forecast(steps=100)
-	pred_ci = pred_uc.conf_int()
-	ax = beta_series_m.plot(label='observed', figsize=(14, 7))
-	pred_uc.predicted_mean.plot(ax=ax, label='Forecast')
-	ax.fill_between(pred_ci.index,
-					pred_ci.iloc[:, 0],
-					pred_ci.iloc[:, 1], color='k', alpha=.25)
-	ax.set_xlabel('Date')
-	ax.set_ylabel('beta_prediction')
-
-	plt.legend()
-	plt.show()
 
 
 # beta_fits, residuals, ratedata = loadData()
