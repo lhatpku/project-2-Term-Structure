@@ -2,8 +2,8 @@ import os
 import pandas as pd
 import numpy as np
 from flask import Flask, jsonify, render_template
-from .term_structure_helper import loadData, fit_yield_curve, ARforecast
-from .bond_price_helper import load_bond, fit_bond_return
+from term_structure_helper import loadData, fit_yield_curve, ARforecast
+from bond_price_helper import load_bond, fit_bond_return
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
