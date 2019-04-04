@@ -2,8 +2,8 @@ import os
 import pandas as pd
 import numpy as np
 from flask import Flask, jsonify, render_template
-from term_structure_helper import loadData, fit_yield_curve, ARforecast
-from bond_price_helper import load_bond, fit_bond_return
+from .term_structure_helper import loadData, fit_yield_curve, ARforecast
+from .bond_price_helper import load_bond, fit_bond_return
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
@@ -19,6 +19,9 @@ ratedata.set_index('Date',inplace=True)
 
 beta_fits = pd.read_sql('select * from betas', con=engine)
 beta_fits.set_index('Date',inplace=True)
+
+sp500_df = pd.read_sql('select * from sp500', con=engine)
+gdp_df = pd.read_sql('select * from gdp', con=engine)
 
 maturities_fit = np.asarray([1,2,3,6,12,24,36,60,84,120,240,360]) 
 
@@ -120,6 +123,19 @@ def yields_annual():
     df1=gb.reset_index()
 
     return df1.to_json(orient='records')
+
+
+@app.route('/sp500')
+def sp500():
+    """Returns the annualized returns for S&P500 return"""
+    return sp500_df.to_json(orient='records')
+
+
+@app.route('/gdp')
+def gdp():
+     """Returns annualized quarterly growth rate in GDP"""
+
+     return gdp_df.to_json(orient='records')
 
 
 if __name__ == "__main__":

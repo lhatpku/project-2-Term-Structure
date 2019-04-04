@@ -38,7 +38,6 @@ def get_monthly_return (bonds_dict,ticker):
     bond_price_monthly_clean = bond_price_monthly[bond_price_monthly.index > last_notna_index]
 
     bond_return_monthly = bond_price_monthly_clean.pct_change(1).dropna()
-    print(bond_return_monthly)
 
     return bond_return_monthly
 

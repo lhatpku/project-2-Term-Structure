@@ -22,5 +22,22 @@ bonds_prices.to_sql('bonds', con=engine, if_exists='replace')
 # bonds_prices = pd.read_sql('select * from bonds', con=engine)
 # print(bonds_prices.set_index('Date'))
 
+###############################
+# Save sp and gdp data
+def sp500_data():
+    database = 'Data/sp500_return.db'
+    conn = sqlite3.connect(database)
+
+    returns = pd.read_sql('select * from rolling_returns', conn)
+    returns.to_sql('sp500', con=engine, if_exists='replace')
+
+def gdp_data():
+    database = 'Data/gdp.db'
+    conn = sqlite3.connect(database)
+    
+    gdp = pd.read_sql('select * from quarterly_growth_rate', conn)
+    gdp.to_sql('gdp', con=engine, if_exists='replace')
 
 
+sp500_data()
+gdp_data()
