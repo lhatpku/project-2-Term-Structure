@@ -248,6 +248,7 @@
             <p>The model fits the bond ETF to several zero coupon bonds derived by yield curve using least square optimization. The weighted maturity 
               based on the analysis is <span id="weighted-maturity" class = "deep-orange-text text-accent-1"></span> years. 
             </p>
+            <button class="w3-button w3-blue" onclick="document.getElementById('bond-model-details').style.display='block'">More Details</button> 
           </div>  
 
       </div>
@@ -256,6 +257,18 @@
           <div class="canvas" id="bonds-fit-pie"></div>
       </div>
 
+    </div>
+
+    <div id="bond-model-details" class="w3-panel w3-white w3-display-container" style="display:none">
+      <span onclick="this.parentElement.style.display='none'"
+      class="w3-button w3-red w3-display-topright">x</span>
+      <h3>Derivation of Bond Returns From Non-Arbitrage Stragegy</h4>
+      <p>Suppose we have two investment strategies: 1) buy a t-year bond at year y, 2) sell the index after one month and buy a (t - 1/12) year
+        bond at one month later. </p>
+      <p>
+        The monthly spot rate or monthly return of the bond can be calculated as:
+        $$ R_y(t) = \frac{P_{(y+1/12)}(t-1/12)}{P_{t}(t)} = \frac{e^{-yield_{y+1/12}(t-1/12)\times (t-1/12)}}{e^{-yield_{y}(t)\times t}}   $$
+      </p>
     </div>
 
     <div class="divider"></div>
@@ -315,6 +328,7 @@
       });
       $('.tooltipped').tooltip();
       $('.scrollspy').scrollSpy();
+      $('.tap-target').tapTarget();
     });
   </script>
   <script src="https://code.highcharts.com/highcharts.src.js"></script>
