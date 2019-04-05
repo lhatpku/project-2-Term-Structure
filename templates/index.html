@@ -20,35 +20,44 @@
   </script>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link href="https://fonts.googleapis.com/css?family=Merriweather|Montserrat|Sacramento|Slabo+27px" rel="stylesheet">
+  <style>
+    #nav-bar {
+      position: fixed;
+      top: 0;
+      z-index: 999;
+      position: sticky;
+    }
+  </style>
 </head>
   
 <body class="grey lighten-2">
 
+  <nav class="nav-wrapper grey darken-4 sticky" id="nav-bar">
+    <div class="container">
+      <a href="" class="brand-logo">Yield Curve Dashboard</a>
+      <a href="" class="sidenav-trigger" data-target="mobile-menu">
+        <i class="material-icons">menu</i>
+      </a>
+      <ul class="right hide-on-med-and-down z-depth-2">
+        <li class="light-blue lighten-1 tooltipped" data-tooltip="Fitting"><a href="#fitting"><i class="material-icons">video_library</i></a></li>
+        <li class="light-blue lighten-1 tooltipped" data-tooltip="Prediction"><a href="#predict"><i class="material-icons">forward</i></a></li>
+        <li class="light-blue lighten-1 tooltipped" data-tooltip="Time Series"><a href="#timeseries"><i class="material-icons">timeline</i></a></li>
+        <li class="light-blue lighten-1 tooltipped" data-tooltip="3d Yield Curve"><a href="/3d"><i class="material-icons">3d_rotation</i></a></li>
+        <li class="light-blue lighten-1 tooltipped" data-tooltip="Economy Indicator"><a href="#economy"><i class="material-icons">insert_chart</i></a></li>
+        <li class="light-blue lighten-1 tooltipped" data-tooltip="Financial Vehicle Fitting"><a href="#bonds-fit"><i class="material-icons">monetization_on</i></a></li>
+      </ul>
+      <ul class="sidenav grey lighten-2" id="mobile-menu">
+        <li><a href="#fitting"><i class="material-icons">video_library</i></a></li>
+        <li><a href="#predict"><i class="material-icons">forward</i></a></li>
+        <li><a href="#timeseries"><i class="material-icons">timeline</i></a></li>
+        <li><a href="/3d"><i class="material-icons">3d_rotation</i></a></li>
+        <li><a href="#economy"><i class="material-icons">insert_chart</i></a></li>
+        <li><a href="#bonds-fit"><i class="material-icons">monetization_on</i></a></li>
+      </ul>
+    </div>
+  </nav>
+
   <header id = "background">
-    <nav class="nav-wrapper transparent sticky">
-      <div class="container">
-        <a href="" class="brand-logo">Yield Curve Dashboard</a>
-        <a href="" class="sidenav-trigger" data-target="mobile-menu">
-          <i class="material-icons">menu</i>
-        </a>
-        <ul class="right hide-on-med-and-down z-depth-2">
-          <li class="light-blue lighten-1 tooltipped" data-tooltip="Fitting"><a href="#fitting"><i class="material-icons">video_library</i></a></li>
-          <li class="light-blue lighten-1 tooltipped" data-tooltip="Prediction"><a href="#predict"><i class="material-icons">forward</i></a></li>
-          <li class="light-blue lighten-1 tooltipped" data-tooltip="Time Series"><a href="#timeseries"><i class="material-icons">timeline</i></a></li>
-          <li class="light-blue lighten-1 tooltipped" data-tooltip="3d Yield Curve"><a href="/3d"><i class="material-icons">3d_rotation</i></a></li>
-          <li class="light-blue lighten-1 tooltipped" data-tooltip="Economy Indicator"><a href="#economy"><i class="material-icons">insert_chart</i></a></li>
-          <li class="light-blue lighten-1 tooltipped" data-tooltip="Financial Vehicle Fitting"><a href="#bonds-fit"><i class="material-icons">monetization_on</i></a></li>
-        </ul>
-        <ul class="sidenav grey lighten-2" id="mobile-menu">
-          <li><a href="#fitting"><i class="material-icons">video_library</i></a></li>
-          <li><a href="#predict"><i class="material-icons">forward</i></a></li>
-          <li><a href="#timeseries"><i class="material-icons">timeline</i></a></li>
-          <li><a href="/3d"><i class="material-icons">3d_rotation</i></a></li>
-          <li><a href="#economy"><i class="material-icons">insert_chart</i></a></li>
-          <li><a href="#bonds-fit"><i class="material-icons">monetization_on</i></a></li>
-        </ul>
-      </div>
-    </nav>
 
     <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
     <a class="next" onclick="plusSlides(1)">&#10095;</a>
